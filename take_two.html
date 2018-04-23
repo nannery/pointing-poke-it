@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My first Vue app</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> 
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <style>
+    .vote-card {
+      min-width: 75px;
+      margin: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div id="user">
+    <div class="container">
+      <input type="text" v-model="name" placeholder="name here"/>
+      <input type="text" v-model="room" placeholder="room id"/>
+      <button v-on:click="roomInfo"> Submit </button>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <form @submit.prevent="jiraSubmit()">
+          <input type="text"
+                 placeholder="JIRA ID"
+                 v-model="currentTask.id"/>
+          <button type="submit"
+                  class="btn btn-secondary">
+            get
+          </button>
+        </form>
+      </div>
+
+      <div class="row">
+        <a target="_blank"
+           :href="currentTaskLink"> {{ currentTask.title }} </a>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row">
+        <vote-card 
+          v-for="score in scores"
+          v-bind:key="score"
+          v-bind:score="score">
+        </vote-card>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    Vue.component('vote-card', {
+      props: ['score'],
+      template: "<button type='button' class='btn btn-secondary vote-card col-sm-2'> {{ score }} </button>"
+    })
+
+    var user = new Vue({
+      el: '#user',
+      data: {
+        name:        null,
+        room:        null,
+        submitted:   false,
+        scores:      ['?', 0.5, 1, 2, 3, 5, 8, 13, 20, 40, 100],
+        currentTask: {
+          id:     'SK-1146',
+          scores: [],
+          title: 'TITLE HERE'
+        },
+        tasks: []
+      },
+      computed: {
+        currentTaskLink: function() {
+          return "https://jira.skintertainment.com/browse/" + this.currentTask.id
+        }
+      },
+      methods: {
+        jiraSubmit: function() {
+          //TODO: get http request to work (if may not with jira)
+          debugger
+          axios.get(this.currentTaskLink)
+               .then(function(response) {
+                 console.log(response);
+               })
+               .catch(function(error) {
+                 console.log('error');
+                 console.log(error);
+               })
+        },
+        roomInfo: function() {
+          console.log("name: " + this.name);
+          console.log("room: " + this.room);
+        },
+      }
+    })
+
+  </script>
+</body>
+</html>
