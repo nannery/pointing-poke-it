@@ -5,10 +5,16 @@ require 'securerandom'
 
 Cuba.define do
   on get do
+    on '/script.js' do
+      File.open('script.js', 'r') { |f| res.write f.read }
+    end
+
+    on '/style.css' do
+      File.open('style.css', 'r') { |f| res.write f.read }
+    end
+
     on ':id' do |_id|
-      File.open('index.html', 'r') do |file|
-        res.write file.read
-      end
+      File.open('index.html', 'r') { |f| res.write f.read }
     end
 
     on root do
