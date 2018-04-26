@@ -5,3 +5,5 @@ source 'https://rubygems.org'
 git_source(:github) { |repo_name| 'https://github.com/#{repo_name}' }
 
 gem 'cuba'
+gem 'httparty' # bc i hate Net::HTTP
+gem 'nokogiri' # bc html regex? lol

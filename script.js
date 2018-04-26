@@ -40,5 +40,3 @@ var user = new Vue({
       console.log("room: " + this.room);
     },
   }
-})
-

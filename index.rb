@@ -6,23 +6,15 @@ require 'json'
 require 'httparty'
 require 'nokogiri'
 
+Cuba.use Rack::Static, urls: %w[/script.js /style.css], root: nil
+
 Cuba.define do
   on get do
-    on 'script.js' do
-      File.open('script.js', 'r') { |f| res.write f.read }
-    end
-
-    on 'style.css' do
-      File.open('style.css', 'r') { |f| res.write f.read }
-    end
-
     on 'jira', param('id') do |id|
       jira_request = HTTParty.get(
         "#{ENV['JIRA_URL']}/browse/#{id}",
-        basic_auth: {
-          username: ENV['JIRA_USERNAME'],
-          password: ENV['JIRA_PASSWORD']
-        }
+        basic_auth: { username: ENV['JIRA_USERNAME'],
+                      password: ENV['JIRA_PASSWORD'] }
       )
       jira_request.ok? or return res.write("JIRA request failed for #{id}")
 
