@@ -2,30 +2,34 @@
 
 require 'cuba'
 require 'securerandom'
-require 'net/http'
 require 'json'
+require 'httparty'
+require 'nokogiri'
 
 Cuba.define do
   on get do
-    on '/script.js' do
+    on 'script.js' do
       File.open('script.js', 'r') { |f| res.write f.read }
     end
 
-    on '/style.css' do
+    on 'style.css' do
       File.open('style.css', 'r') { |f| res.write f.read }
     end
 
     on 'jira', param('id') do |id|
-      jira_request = Net::HTTP::Get.new('/')
-      jira_request.body = body unless body.nil?
-      request.basic_auth(ENV['JIRA_USERNAME'], ENV['JIRA_PASSWORD'])
+      jira_request = HTTParty.get(
+        "#{ENV['JIRA_URL']}/browse/#{id}",
+        basic_auth: {
+          username: ENV['JIRA_USERNAME'],
+          password: ENV['JIRA_PASSWORD']
+        }
+      )
+      jira_request.ok? or return res.write("JIRA request failed for #{id}")
 
-      jira_conn             = Net::HTTP.new('https://jira.skintertainment.com')
-      jira_conn.use_ssl     = 'TLSv1'
-      jira_conn.verify_mode = OpenSSL::SSL::VERIFY_NONE
+      parsed = Nokogiri::HTML(jira_request.body)
+      node   = parsed.css('#summary-val')
 
-      jira_response = jira_conn.request(jira_request)
-      json = JSON.parse(jira_response)
+      res.write(node.any? ? node.text : "Can't find title for #{id}")
     end
 
     on ':id' do |_id|
