@@ -1,59 +1,24 @@
-<!DOCTYPE html>
 <html>
 <head>
   <title>My first Vue app</title>
-
-  <link rel="stylesheet" type="text/css" href="semantic/dist/semantic.min.css">
-  <script
-    src="https://code.jquery.com/jquery-3.1.1.min.js"
-    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-    crossorigin="anonymous"
-    type="application/javascript"></script>
-  <script src="semantic/dist/semantic.min.js" type="application/javascript"></script>
-
-  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" type="application/javascript"></script>
-
   <link rel="stylesheet" type="text/css" href="/style.css">
-  <script src="/script.js" type="application/javascript"></script>
 </head>
 
 <body>
-  <div id="user">
-    <div class="container">
-      <input type="text" v-model="name" placeholder="name here"/>
-      <input type="text" v-model="room" placeholder="room id"/>
-      <button v-on:click="roomInfo"> Submit </button>
-    </div>
+  <main id="app">
+    <section id="room">
+      Room Info
+      <input type="text" v-model="roomID" placeholder="room id"/>
+      <button v-on:click.prevent="logIt"> Log it </button>
+    </section>
 
-    <div class="container">
-      <div class="row">
-        <form @submit.prevent="jiraSubmit()">
-          <input type="text"
-                 placeholder="JIRA ID"
-                 v-model="currentTask.id"/>
-          <button type="submit"
-                  class="btn btn-secondary">
-            get
-          </button>
-        </form>
-      </div>
+    <section v-for="score in taskScores">
+      Cool score: {{ score }}
+    </section>
+  </main>
 
-      <div class="row">
-        <a target="_blank"
-           :href="currentTaskLink"> {{ currentTask.title }} </a>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="row">
-        <vote-card
-          v-for="score in scores"
-          v-bind:key="score"
-          v-bind:score="score">
-        </vote-card>
-      </div>
-    </div>
-  </div>
-
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js" type="application/javascript"></script>
+  <script src="/script.js" type="application/javascript"></script>
 </body>
 </html>
