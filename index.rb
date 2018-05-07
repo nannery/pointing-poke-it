@@ -6,7 +6,9 @@ require 'json'
 require 'httparty'
 require 'nokogiri'
 
-Cuba.use Rack::Static, urls: %w[/script.js /style.css], root: nil
+Cuba.use Rack::Static, urls: %w[/script.js
+                                /style.css
+                                /favicon.ico], root: nil
 
 Cuba.define do
   on get do
